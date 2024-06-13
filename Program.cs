@@ -1,9 +1,19 @@
+global using dotnet_RPG.Models;
+global using dotnet_RPG.Services.CharacterService;
+global using dotnet_RPG.DTO.Character;
+global using AutoMapper;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddControllers();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddScoped<ICharacterService, CharacterService>();
 
 var app = builder.Build();
 
@@ -15,6 +25,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthorization();
 
 var summaries = new[]
 {
@@ -35,6 +46,8 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
+
+app.MapControllers();
 
 app.Run();
 
